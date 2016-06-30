@@ -75,7 +75,38 @@ public class DayGridSceneBuilder extends AbstractSceneBuilder {
       renderLine(myInputApi.getProjectEnd(), "timeline.project_end", 2, OffsetLookup.BY_START_DATE);
     }
     renderNonWorkingDayColumns();
+    renderDayLines();
   }
+
+  // rallyemax - draw lines for each day
+  private void renderDayLines() {
+    final int topUnitHeight = myInputApi.getTopLineHeight();
+    List<Offset> defaultOffsets = myInputApi.getAtomUnitOffsets();
+    int curX = defaultOffsets.get(0).getOffsetPixels();
+    if (curX > 0) {
+      curX = 0;
+    }
+    for (final Offset offset : defaultOffsets) {
+      int dayMask = offset.getDayMask();
+      CalendarEvent event = myInputApi.getEvent(offset.getOffsetStart());
+      final int _curX = curX;
+      Runnable r = new Runnable() {
+        @Override
+        public void run() {
+          // Create day bars in main area
+          Line line = getCanvas().createLine(_curX, topUnitHeight * 2, _curX,
+              getHeight() + topUnitHeight * 2);
+          line.setStyle("timeline.day");
+        }
+      };
+      if ((dayMask & (DayMask.WEEKEND)) == 0) {
+        // We render non-weekends only. 
+        r.run();
+      }
+      curX = offset.getOffsetPixels();
+    }
+  }
+
 
   private void renderLine(Date date, String style, int marginPx, OffsetLookup.ComparatorBy<Date> dateComparator) {
     final int topUnitHeight = myInputApi.getTopLineHeight();

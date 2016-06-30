@@ -109,7 +109,7 @@ public class BottomUnitSceneBuilder extends AbstractSceneBuilder {
       }
     }
     getCanvas().createLine(prevOffset.getOffsetPixels(), getLineTopPosition(), prevOffset.getOffsetPixels(),
-        getLineTopPosition() + 10);
+        getLineTopPosition() + 20);
   }
 
   private int getLineTopPosition() {
